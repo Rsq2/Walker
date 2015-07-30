@@ -25,6 +25,9 @@ class Texas_Ranger
     @output = CSV.open('directions_data.csv', "w")
     @dump = CSV.open('failed_addresses.csv', "w") 
     
+    # TODO: Start address = containing folder name? This would keep photos and output organized
+    $start_point = '3203 SE Woodstock Blvd, Portland, OR 97202' # <---------- Set start point here!
+
     visit 'https://www.google.com/maps/dir/'
   end
 
@@ -38,7 +41,7 @@ class Texas_Ranger
     destination = find('#sb_ifc51 > input')
     
     walk_button.click
-    start.set('400 SW 6th Ave #902, Portland, OR 97204')
+    start.set($start_point)
 
     @input.each do |address|
       sleep 1
