@@ -1,9 +1,7 @@
 Walker - Google Directions Scraper
 =======================
 
-Thanks for taking the time to view my work. 
-
-This is a browser automation written using Capybara and Selenium webdriver that will take a list of addresses (.csv) and dump walking directions from a starting point to each address into a separate (.csv) file. It will also take a route screenshot upon successful lookup
+This is a browser automation written using Capybara and Selenium webdriver that will take a list of addresses (.csv) and dump walking directions from a starting point to each address into a separate (.csv) file. It will also take a route screenshot upon successful lookup.
 
 A list of failed addresses is also compiled and placed into a separate file for cleanup / troubleshooting.
 
