@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'capybara'
 require 'csv'
-
+require_relative './entry.rb'
 
 Capybara.run_server = false
 Capybara.current_driver = :selenium
@@ -42,13 +42,13 @@ class Texas_Ranger
 
   # Lookup
     @input.each do |address|
+      this_entry = Entry.new(address)
+      puts "\nCurrent Entry: #{address}"
+
       sleep 1
       destination.set(address)
       search_button.click
       sleep 3
-
-      this_entry = [address]
-      puts "\nCurrent Entry: #{address}"
 
     # Output Sequence
       found = test_address(this_entry)
@@ -56,6 +56,8 @@ class Texas_Ranger
         collect_data(this_entry)
         take_screenshot(address)
         @output << this_entry
+      else
+        next
       end
     end
 
@@ -63,7 +65,7 @@ class Texas_Ranger
     puts "\n Scraping for #{@filename} Complete"
   end
 
-# Catch For Bad Addresses
+# Catch Sequence For Bad Addresses
   def test_address(entry)
     entry_exists = false
 
@@ -71,7 +73,7 @@ class Texas_Ranger
     begin
       if page.has_css?('span.widget-directions-error')
         puts "\t Precision Failure - Exact Address Not Found"
-        entry << 'Precision Failure - Exact Address Not Found'
+        entry.steps << 'Precision Failure - Exact Address Not Found'
         puts "\t---> Continuing to Next Entry\n"
         return entry_exists = false
       end
@@ -81,16 +83,14 @@ class Texas_Ranger
       sleep 3
     rescue Capybara::ElementNotFound
       puts "\tLookup Failure - Address Not Found"
-      entry << 'Lookup Failure - Address Not Found'
+      entry.steps << 'Lookup Failure - Address Not Found'
       puts "\t---> Continuing to Next Entry\n"
       return entry_exists = false
     else
+
+    # Address Found
       return entry_exists = true
     end
-
-  # Address Found
-    validity = true
-    return validity
   end
 
 # Gather Up That Delicious Data
@@ -101,7 +101,7 @@ class Texas_Ranger
   # Pair Array Indices 1:1
     steps.zip(distances).each do |step, distance|
       sleep 1
-      entry << distance.text + '--' + step.text
+      entry.steps << distance.text + '--' + step.text
       puts "\tAdding...#{distance.text}--#{step.text}"
     end
   end
